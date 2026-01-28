@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>FlightChain - İletişim Terminali</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top p-3">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#" style="font-size: 25px;">
+                <img src="images/noName_logo.PNG" alt="Uygulama Logosu" height="40px">   FlightChain
+            </a>
+            <div class="ms-auto d-flex align-items-center">
+                <button class="btn btn-warning me-3" data-bs-toggle="modal" data-bs-target="#fuelAnalysisModal"  id="open-fuel-analysis-btn">
+                    <i class="fas fa-gas-pump"></i> Yakıt Analizi
+                </button>
+                <button class="btn btn-info me-3" data-bs-toggle="modal" data-bs-target="#routeOptimizationModal" id="open-route-optimization-btn">
+                    <i class="fas fa-route"></i> Rota Optimizasyonu
+                </button>
+                <!-- CÜZDAN BAĞLAMA BUTONU (Başlangıçta görünür) -->
+                <button id="connect-wallet-btn" class="btn btn-primary me-3"><i class="fas fa-wallet"></i> Cüzdanı Bağla</button>       
+                <!-- PROFİL VE KAYIT MENÜSÜ (Cüzdan bağlandıktan sonra görünür) -->
+                <div id="profile-area" class="dropdown" style="display: none;">
+                    <button class="btn btn-outline-light dropdown-toggle" type="button" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <span id="profile-id"></span>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-end p-3" aria-labelledby="profileDropdown" style="width: 320px;">
+                        <div class="text-center mb-2">
+                            <strong id="profile-id-menu"></strong>
+                            <p id="profile-address-menu" class="small text-muted" style="word-break: break-all;"></p>
+                        </div>
+                        <h6 class="dropdown-header">Varlık Kaydı</h6>
+                        <div class="input-group">
+                            <select id="register-select" class="form-select">
+                                <option value="TK-001">Uçak: TK-001</option>
+                                <option value="TK-002">Uçak: TK-002</option>
+                                <option value="ATC">Kule: ATC</option>
+                            </select>
+                            <button id="register-btn" class="btn btn-success">Kaydet</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Ana İçerik -->
+    <div class="container-fluid p-5">
+        <div class="card mb-4" id="message-send-panel">
+            <div class="card-header"><h4><i class="fas fa-satellite-dish"></i> Mesaj Gönder</h4></div>
+            <div class="card-body">
+                <form id="message-form" class="row g-3 align-items-end">
+                    <div class="col-md-3">
+                        <label class="form-label">Gönderen (Aktif Cüzdan)</label>
+                        <input type="text" id="current-sender" class="form-control" readonly placeholder="Cüzdan bağlanmadı...">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="recipient-select" class="form-label">Alıcı</label>
+                        <select id="recipient-select" class="form-select" required>
+                            <option value="TK-001">Uçak: TK-001</option>
+                            <option value="TK-002">Uçak: TK-002</option>
+                            <option value="ATC">Kule: ATC</option>
+                        </select>
+                    </div>
+                    <div class="col-md-5">
+                        <label for="message-content" class="form-label">Mesaj</label>
+                        <input type="text" class="form-control" id="message-content" placeholder="Talimat veya rapor girin..." required>
+                    </div>
+                    <div class="col-md-1">
+                        <button type="submit" class="btn btn-primary w-100 h-100">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- index.html -->
+
+    <!-- YENİ ve SEKMELİ KAYIT DEFTERİ PANELLERİ -->
+    <div class="row g-4" id="message-panel-container">
+        <!-- TK-001 Paneli -->
+        <div class="col-lg-4 aircraft-column-wrapper">
+            <div class="aircraft-column h-100 d-flex flex-column">
+                <!-- Panel Başlığı -->
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5><i class="fas fa-plane" style="color:var(--tk001-color)"></i> Uçak: TK-001</h5>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="toggle-tk001">
+                        <label class="form-check-label small" for="toggle-tk001">Tümünü Gör</label>
+                    </div>
+                </div>
+
+                <!-- Sekme Başlıkları -->
+                <ul class="nav nav-tabs nav-fill small mt-2">
+                    <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab-tk001-all">Tümü</button></li>
+                    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-tk001-instructions">Talimatlar</button></li>
+                    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-tk001-analyses">Analizler</button></li>
+                    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-tk001-telemetry">Telemetri Verileri</button></li>
+                </ul>
+
+                <!-- Sekme İçerikleri -->
+                <div class="tab-content flex-grow-1">
+                    <div class="tab-pane fade show active" id="tab-tk001-all"><div id="messages-tk001" class="log-feed h-100"></div></div>
+                    <div class="tab-pane fade" id="tab-tk001-instructions"><div class="log-feed h-100"></div></div>
+                    <div class="tab-pane fade" id="tab-tk001-analyses"><div class="log-feed h-100"></div></div>
+                    <div class="tab-pane fade" id="tab-tk001-telemetry"><div class="log-feed h-100"></div></div>            
+                </div>
+            </div>
+        </div>
+
+        <!-- TK-002 Paneli -->
+        <div class="col-lg-4 aircraft-column-wrapper">
+            <div class="aircraft-column h-100 d-flex flex-column">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5><i class="fas fa-plane" style="color:var(--tk002-color)"></i> Uçak: TK-002</h5>
+                    <div class="form-check form-switch"><input class="form-check-input" type="checkbox" id="toggle-tk002">
+                        <label class="form-check-label small" for="toggle-tk002">Tümünü Gör</label>
+                    </div>
+                </div>
+                <ul class="nav nav-tabs nav-fill small mt-2">
+                    <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab-tk002-all">Tümü</button></li>
+                    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-tk002-instructions">Talimatlar</button></li>
+                    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-tk002-analyses">Analizler</button></li>
+                    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-tk002-telemetry">Telemetri Verileri</button></li>
+                </ul>
+                <div class="tab-content flex-grow-1">
+                    <div class="tab-pane fade show active" id="tab-tk002-all"><div id="messages-tk002" class="log-feed h-100"></div></div>
+                    <div class="tab-pane fade" id="tab-tk002-instructions"><div class="log-feed h-100"></div></div>
+                    <div class="tab-pane fade" id="tab-tk002-analyses"><div class="log-feed h-100"></div></div>
+                    <div class="tab-pane fade" id="tab-tk002-telemetry"><div class="log-feed h-100"></div></div>            
+                </div>
+            </div>
+        </div>
+        
+        <!-- ATC Paneli -->
+        <div class="col-lg-4 aircraft-column-wrapper">
+            <div class="aircraft-column h-100 d-flex flex-column">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5><i class="fas fa-broadcast-tower" style="color:var(--atc-color)"></i> Kule: ATC</h5>
+                </div>
+                <ul class="nav nav-tabs nav-fill small mt-2">
+                    <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab-atc-all">Tümü</button></li>
+                    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-atc-instructions">Talimatlar</button></li>
+                    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-atc-analyses">Analizler</button></li>
+                    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-atc-telemetry">Telemetri Verileri</button></li>
+                </ul>
+                <div class="tab-content flex-grow-1">
+                    <div class="tab-pane fade show active" id="tab-atc-all"><div id="messages-atc" class="log-feed h-100"></div></div>
+                    <div class="tab-pane fade" id="tab-atc-instructions"><div class="log-feed h-100"></div></div>
+                    <div class="tab-pane fade" id="tab-atc-analyses"><div class="log-feed h-100"></div></div>
+                    <div class="tab-pane fade" id="tab-atc-telemetry"><div class="log-feed h-100"></div></div>              
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div id="welcome-section" class="mt-4">
+        <div class="card p-5 text-center">
+            <div class="text-center mb-4">
+                <img src="images/noName_logo.PNG" alt="Uygulama Logosu" height="200px">
+            </div>
+            <h1 class="display-5 fw-bold">FlightChain'e Hoş Geldiniz</h1>
+            <p class="lead text-muted mb-4">Havacılığın geleceği, merkeziyetsiz ve güvenli bir ağ üzerinde inşa ediliyor.</p>
+            <div class="row g-4 text-start">
+                <div class="col-md-4">
+                    <h4><i class="fas fa-shield-alt text-primary me-2"></i> Kırılmaz Güvenlik</h4>
+                    <p>Değiştirilemez blockchain kayıtları sayesinde tüm iletişim ve telemetri verileri manipülasyona karşı %100 güvendedir. Kaza araştırmaları ve sorumluluk takibi için kusursuz bir kayıt defteri sunar.</p>
+                </div>
+                <div class="col-md-4">
+                    <h4><i class="fas fa-eye text-success me-2"></i> Radikal Şeffaflık</h4>
+                    <p>Tüm paydaşlar (ATC, pilotlar, havayolları) ortak bir doğruluk kaynağı üzerinden çalışır. Bu, operasyonel hataları ve "mesajı almadım" gibi anlaşmazlıkları en aza indirir.</p>
+                </div>
+                <div class="col-md-4">
+                    <h4><i class="fas fa-brain text-info me-2"></i> Akıllı Optimizasyon</h4>
+                    <p>Anlık paylaşılan ağ verileri, AI destekli yakıt ve rota analizleriyle maliyetleri düşüren ve güvenliği artıran proaktif önerilere dönüştürülür. Reaktif değil, proaktif havacılık!</p>
+                </div>
+            </div>
+            <hr class="my-4">
+            <p class="fs-5">Simülasyonu başlatmak için lütfen sağ üst köşeden MetaMask cüzdanınızı bağlayın.</p>
+        </div>
+    </div>
+    </div>
+
+    <!-- Toasts -->
+    <div id="toast-container" class="toast-container position-fixed top-0 end-0 p-3">
+    </div>
+
+    <!-- Harici JavaScript Kütüphaneleri -->
+    <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="js/config.js"></script>
+    <script src="js/app.js"></script>
+
+    <!-- YAKIT ANALİZİ MODAL (POP-UP) -->
+<div class="modal fade" id="fuelAnalysisModal" tabindex="-1" aria-labelledby="fuelAnalysisModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="fuelAnalysisModalLabel"><i class="fas fa-gas-pump"></i> Dinamik Yakıt Verimliliği Analizi</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="fuel-analysis-form">
+                    <div class="row">
+                        <!-- Girdi Alanları -->
+                        <div class="col-md-6">
+                            <h5><i class="fas fa-plane-departure"></i> Uçuş Verileri</h5>
+                            <div class="mb-3">
+                                <label class="form-label">Mevcut Yakıt (%)</label>
+                                <input type="number" id="fa-fuel" class="form-control" value="65" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Hedefe Kalan Mesafe (Deniz Mili)</label>
+                                <input type="number" id="fa-range" class="form-control" value="1200" required>
+                            </div>
+                             <div class="mb-3">
+                                <label class="form-label">Planlanan Rezerv Yakıt (%)</label>
+                                <input type="number" id="fa-planned-reserve" class="form-control" value="15" required>
+                            </div>
+                            
+                            <h5 class="mt-4"><i class="fas fa-satellite-dish"></i> FlightChain Verileri (Anlık)</h5>
+                            <div class="mb-3">
+                                <label class="form-label">Anlık Rüzgar (Knot, Kafa Rüzgarı için '-')</label>
+                                <input type="number" id="fa-wind" class="form-control"  required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Tahmini Bekleme Süresi (Dakika)</label>
+                                <input type="number" id="fa-holding" class="form-control" required>
+                            </div>
+                        </div>
+                        <!-- Analiz Sonucu -->
+                        <div class="col-md-6">
+                            <h5><i class="fas fa-brain"></i> Analiz Sonucu</h5>
+                            <div id="fuel-analysis-result" class="p-3 bg-light rounded h-100 d-flex flex-column justify-content-center">
+                                <p class="text-center text-muted">Analiz için verileri girip butona basın.</p>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
+                <button type="button" id="run-analysis-btn" class="btn btn-primary">Analizi Çalıştır</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="routeOptimizationModal" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fas fa-route"></i> AI Tabanlı Rota Optimizasyonu</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="route-optimization-form">
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <h5><i class="fas fa-plane-departure"></i> Optimize Edilecek Uçuş</h5>
+                            <div class="mb-2"><label>Uçuş ID</label><input type="text" id="ro-flightid" class="form-control" readonly></div>
+                            <div class="mb-2"><label>Kalkış - Varış</label><input type="text" id="ro-departure-arrival" class="form-control" readonly></div>
+                            <div class="mb-2"><label>Mevcut Konum (Lat, Lon)</label><input type="text" id="ro-current-pos" class="form-control" readonly></div>
+                            
+                            <h5 class="mt-4"><i class="fas fa-cloud-showers-heavy"></i> Dinamik Hava Riski</h5>
+                            <div class="mb-2"><label>Risk Konumu (Lat, Lon)</label><input type="text" id="ro-risk-pos" class="form-control" readonly></div>
+                            <div class="mb-2"><label>Etki Alanı Yarıçapı (KM)</label><input type="number" id="ro-risk-radius" class="form-control" readonly></div>
+                        </div>
+                        <div class="col-lg-8">
+                            <div id="routeMap" style="height: 450px; border-radius: 0.5rem; border: 1px solid #ccc;"></div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer d-flex justify-content-between">
+                <div id="route-analysis-result" class="text-start"></div>
+                <div>
+                    <button type="submit" form="route-optimization-form" class="btn btn-primary">Sonucu Gönder</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

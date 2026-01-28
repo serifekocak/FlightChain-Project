@@ -1,0 +1,22 @@
+[
+  { "id": "IST", "name": "Istanbul VOR", "lat": 41.0969, "lon": 28.8153 },
+  { "id": "KFK", "name": "Kefken VOR", "lat": 41.1375, "lon": 30.5628 },
+  { "id": "TEK", "name": "Tekirdağ Çorlu VOR", "lat": 41.1444, "lon": 27.8711 },
+  { "id": "YES", "name": "Yenişehir VOR", "lat": 40.2442, "lon": 29.5392 },
+  { "id": "BIG", "name": "Bigadiç VOR", "lat": 39.4006, "lon": 28.2325 },
+  { "id": "AKH", "name": "Akhisar VOR", "lat": 38.8683, "lon": 27.8769 },
+  { "id": "ADB", "name": "Adnan Menderes VOR", "lat": 38.2933, "lon": 27.1581 },
+  { "id": "DAL", "name": "Dalaman VOR", "lat": 36.7233, "lon": 28.7831 },
+  { "id": "ANT", "name": "Antalya VOR", "lat": 36.9189, "lon": 30.6861 },
+  { "id": "ESB", "name": "Esenboğa VOR", "lat": 40.0886, "lon": 32.9911 },
+  { "id": "TUZ", "name": "Tuz Gölü VOR", "lat": 39.0522, "lon": 33.3981 },
+  { "id": "KY", "name": "Konya VOR", "lat": 37.9056, "lon": 32.5531 },
+  { "id": "KPP", "name": "Kapadokya VOR", "lat": 38.7083, "lon": 34.8467 },
+  { "id": "SIV", "name": "Sivas VOR", "lat": 39.8167, "lon": 36.9000 },
+  { "id": "ELZ", "name": "Elazığ VOR", "lat": 38.6144, "lon": 39.3089 },
+  { "id": "GAP", "name": "Gaziantep VOR", "lat": 37.0422, "lon": 37.4764 },
+  { "id": "MAL", "name": "Malatya VOR", "lat": 38.4117, "lon": 38.0772 },
+  { "id": "TRA", "name": "Trabzon VOR", "lat": 40.9983, "lon": 39.7917 },
+  { "id": "ERZ", "name": "Erzurum VOR", "lat": 39.9556, "lon": 41.1711 },
+  { "id": "SAM", "name": "Samsun VOR", "lat": 41.2589, "lon": 36.5647 }
+]

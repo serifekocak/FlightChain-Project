@@ -1,0 +1,26 @@
+[
+  {
+    "flightId": "TK-001",
+    "airline": "THY",
+    "departure": "LTFM",
+    "arrival": "LTAC",
+    "route": ["IST", "KFK", "ESB"],
+    "currentStatus": {
+      "waypointIndex": 1,
+      "location": { "lat": 41.10, "lon": 29.85 },
+      "fuelPercent": 88
+    }
+  },
+  {
+    "flightId": "TK-002",
+    "airline": "Pegasus",
+    "departure": "LTBJ",
+    "arrival": "LTDA",
+    "route": ["ADB", "KY", "GAP"],
+    "currentStatus": {
+      "waypointIndex": 1,
+      "location": { "lat": 38.05, "lon": 29.80 },
+      "fuelPercent": 75
+    }
+  }
+]

@@ -1,0 +1,21 @@
+[
+  { "icao": "LTFM", "name": "İstanbul Havalimanı", "lat": 41.2753, "lon": 28.7519 },
+  { "icao": "LTFJ", "name": "Sabiha Gökçen Havalimanı", "city": "İstanbul", "lat": 40.8986, "lon": 29.3092 },
+  { "icao": "LTAC", "name": "Esenboğa Havalimanı", "city": "Ankara", "lat": 40.1281, "lon": 32.9951 },
+  { "icao": "LTBJ", "name": "Adnan Menderes Havalimanı", "city": "İzmir", "lat": 38.2924, "lon": 27.1569 },
+  { "icao": "LTAI", "name": "Antalya Havalimanı", "lat": 36.8987, "lon": 30.8005 },
+  { "icao": "LTFE", "name": "Milas-Bodrum Havalimanı", "city": "Muğla", "lat": 37.2506, "lon": 27.6644 },
+  { "icao": "LTBS", "name": "Dalaman Havalimanı", "city": "Muğla", "lat": 36.7131, "lon": 28.7925 },
+  { "icao": "LTCG", "name": "Trabzon Havalimanı", "lat": 40.9951, "lon": 39.7897 },
+  { "icao": "LTAZ", "name": "Kapadokya Havalimanı", "city": "Nevşehir", "lat": 38.7719, "lon": 34.5342 },
+  { "icao": "LTBY", "name": "Konya Havalimanı", "lat": 37.9790, "lon": 32.5619 },
+  { "icao": "LTCA", "name": "Elazığ Havalimanı", "lat": 38.6074, "lon": 39.2912 },
+  { "icao": "LTAF", "name": "Adana Şakirpaşa Havalimanı", "lat": 36.9822, "lon": 35.2804 },
+  { "icao": "LTDA", "name": "Hatay Havalimanı", "lat": 36.3625, "lon": 36.2811 },
+  { "icao": "LTCC", "name": "Diyarbakır Havalimanı", "lat": 37.8938, "lon": 40.2012 },
+  { "icao": "LTAJ", "name": "Gaziantep Oğuzeli Havalimanı", "lat": 36.9479, "lon": 37.4787 },
+  { "icao": "LTBR", "name": "Bursa Yenişehir Havalimanı", "lat": 40.2552, "lon": 29.5630 },
+  { "icao": "LTCF", "name": "Kars Harakani Havalimanı", "lat": 40.5622, "lon": 43.1150 },
+  { "icao": "LTAU", "name": "Erkilet Havalimanı", "city": "Kayseri", "lat": 38.7704, "lon": 35.4954 },
+  { "icao": "LTCI", "name": "Van Ferit Melen Havalimanı", "lat": 38.4682, "lon": 43.3323 }
+]
